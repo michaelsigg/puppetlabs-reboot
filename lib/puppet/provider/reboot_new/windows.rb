@@ -1,4 +1,4 @@
-Puppet::Type.type(:reboot).provide :windows do
+Puppet::Type.type(:reboot_new).provide :windows do
   confine :operatingsystem => :windows
   defaultfor :operatingsystem => :windows
 

@@ -1,4 +1,4 @@
-Puppet::Type.newtype(:reboot) do
+Puppet::Type.newtype(:reboot_new) do
   @doc = <<-'EOT'
     Manages system reboots.  The `reboot` type is typically
     used in situations where a resource performs a change, e.g.
@@ -216,7 +216,7 @@ Puppet::Type.newtype(:reboot) do
       else
         self.class.rebooting = true
         Puppet.notice("Scheduling system reboot with message: \"#{self[:message]}\"")
-        provider.reboot
+        provider.reboot_new
       end
     else
       Puppet.debug("Skipping reboot")
