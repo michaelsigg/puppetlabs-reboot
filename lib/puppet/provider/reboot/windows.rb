@@ -109,12 +109,34 @@ Puppet::Type.type(:reboot).provide :windows do
     match = Facter[:kernelversion].value.match(/\d+\.\d+\.(\d+)/) and match[1].to_i >= 6001
   end
 
+  def check_sched_comp_cleanup
+    schedstatus = false
+    begin
+      service = WIN32OLE.new('Schedule.Service')
+      service.Connect
+      root = service.GetFolder("\\Microsoft\\Windows\\Servicing")
+      taskCollection = root.GetTasks(0)
+      taskCollection.each do |registeredTask|
+        if registeredTask.name == 'StartComponentCleanup'
+          schedstatus = true if registeredTask.State == 4 # 4== RUNNING
+        end
+      end
+      schedstatus
+    rescue => e
+      Puppet.debug("Servicing ScheduleTask Folder not found. Error: #{e.message}")
+      schedstatus
+    end
+  end
+
   def component_based_servicing?
     return false unless vista_sp1_or_later?
 
     # http://msdn.microsoft.com/en-us/library/windows/desktop/aa370556(v=vs.85).aspx
     path = 'SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending'
     pending = key_exists?(path)
+    pendingscheduledtask = check_sched_comp_cleanup if pending
+    Puppet.debug("Cancel Reboot Scheduled Task running") if pendingscheduledtask
+    pending = false if pendingscheduledtask
     Puppet.debug("Pending reboot: HKLM\\#{path}") if pending
     pending
   end
