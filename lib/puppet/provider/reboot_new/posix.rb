@@ -1,4 +1,4 @@
-Puppet::Type.type(:reboot).provide :posix do
+Puppet::Type.type(:reboot_new).provide :posix do
   desc "POSIX provider for the reboot type.
 
   This provider handles rebooting for POSIX systems. It does not support

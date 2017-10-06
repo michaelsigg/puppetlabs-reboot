@@ -1,7 +1,7 @@
 require 'pathname'
-require Pathname.new(__FILE__).dirname + '../../../' + 'puppet/provider/reboot/posix'
+require Pathname.new(__FILE__).dirname + '../../../' + 'puppet/provider/reboot_new/posix'
 
-Puppet::Type.type(:reboot).provide :linux, :parent => :posix do
+Puppet::Type.type(:reboot_new).provide :linux, :parent => :posix do
   confine :kernel => :linux
 
   def initialize(resource = nil)
