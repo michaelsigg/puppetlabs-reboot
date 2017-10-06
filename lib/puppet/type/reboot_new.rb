@@ -216,7 +216,7 @@ Puppet::Type.newtype(:reboot_new) do
       else
         self.class.rebooting = true
         Puppet.notice("Scheduling system reboot with message: \"#{self[:message]}\"")
-        provider.reboot_new
+        provider.reboot
       end
     else
       Puppet.debug("Skipping reboot")
